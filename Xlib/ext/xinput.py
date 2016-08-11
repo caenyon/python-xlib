@@ -712,7 +712,13 @@ class XIChangeHierarchy(rq.Request):
         rq.List('changes', ChangeHierarchyAction())
     )
 
-
+def change_hierarchy(self, *changes):
+    return XIChangeHierarchy(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        num_changes=len(changes),
+        changes=changes
+    )
 
 def init(disp, info):
     disp.extension_add_method('display', 'xinput_query_version', query_version)
