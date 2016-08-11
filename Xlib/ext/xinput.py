@@ -707,7 +707,7 @@ class XIChangeHierarchy(rq.Request):
         rq.Card8('opcode'),
         rq.Opcode(43),
         rq.RequestLength(),
-        rq.Card8('num_changes'),  # TODO: change to LengthOf
+        rq.LengthOf('changes', 1),
         rq.Pad(3),
         rq.List('changes', ChangeHierarchyAction())
     )
@@ -716,7 +716,6 @@ def change_hierarchy(self, *changes):
     return XIChangeHierarchy(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
-        num_changes=len(changes),
         changes=changes
     )
 
