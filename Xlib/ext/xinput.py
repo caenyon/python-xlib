@@ -712,7 +712,7 @@ class XIChangeHierarchy(rq.Request):
         rq.List('changes', ChangeHierarchyAction())
     )
 
-def change_hierarchy(self, *changes):
+def _change_hierarchy(self, *changes):
     return XIChangeHierarchy(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -720,16 +720,16 @@ def change_hierarchy(self, *changes):
     )
 
 def add_master(self, name, send_core=True, enable=True):
-    return change_hierarchy(self, (AddMaster, send_core, enable, name))
+    return _change_hierarchy(self, (AddMaster, send_core, enable, name))
 
 def remove_master(self, deviceid, return_mode=Floating, return_pointer=0, return_keyboard=0):
-    return change_hierarchy(self, (RemoveMaster, deviceid, return_mode, return_pointer, return_keyboard))
+    return _change_hierarchy(self, (RemoveMaster, deviceid, return_mode, return_pointer, return_keyboard))
 
 def attach_slave(self, deviceid, new_master):
-    return change_hierarchy(self, (AttachSlave, deviceid, new_master))
+    return _change_hierarchy(self, (AttachSlave, deviceid, new_master))
 
 def detach_slave(self, deviceid):
-    return change_hierarchy(self, (DetachSlave, deviceid))
+    return _change_hierarchy(self, (DetachSlave, deviceid))
 
 class ChangeHierarchyContext(object):
 
@@ -753,7 +753,7 @@ class ChangeHierarchyContext(object):
         self.events.append((DetachSlave, deviceid))
 
     def __exit__(self, *exc):
-        change_hierarchy(self.display, *self.events)
+        _change_hierarchy(self.display, *self.events)
 
 
 def init(disp, info):
