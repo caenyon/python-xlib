@@ -672,6 +672,48 @@ DetachSlaveInfo = rq.Struct(
     rq.Pad(2),
 )
 
+event_types = {DetachSlave: DetachSlaveInfo,
+               AttachSlave: AttachSlaveInfo,
+               AddMaster: AddMasterInfo,
+               RemoveMaster: RemoveMasterInfo}
+
+class ChangeHierarchyAction(rq.Struct):
+
+    """This class dispatches to different Strucs depending on the first
+    argument (type) that is provided to the to_binary function. This is
+    used to allow XIChangeHierarchy to be called with a list of diifferent
+    actions. The xlib implementation uses union structs for this.
+
+    This is a hack, but the best I could come up with for now.
+    """
+    structcode = None
+
+    def __init__(self):
+        pass
+
+    def to_binary(self, *varargs, **keys):
+        if len(varargs):
+            event_type = varargs[0]
+        elif 'type' in keys:
+            event_type = keys['type']
+        else:
+            raise TypeError("Missing required argument type")
+
+        return event_types[event_type].to_binary(*varargs, **keys)
+
+class XIChangeHierarchy(rq.Request):
+
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(43),
+        rq.RequestLength(),
+        rq.Card8('num_changes'),  # TODO: change to LengthOf
+        rq.Pad(3),
+        rq.List('changes', ChangeHierarchyAction())
+    )
+
+
+
 def init(disp, info):
     disp.extension_add_method('display', 'xinput_query_version', query_version)
     disp.extension_add_method('window', 'xinput_select_events', select_events)
