@@ -639,6 +639,39 @@ DeviceChangedEventData = rq.Struct(
     rq.List('classes', ClassInfo),
 )
 
+AddMasterInfo = rq.Struct(
+    rq.Card16('type', AddMaster),
+    rq.RequestLength(),
+    rq.LengthOf('name', 2),
+    rq.Card8('send_core', 1),
+    rq.Card8('enable', 1),
+    rq.String8('name', pad=2)
+)
+
+RemoveMasterInfo = rq.Struct(
+    rq.Card16('type', RemoveMaster),
+    rq.RequestLength(),
+    DEVICEID('deviceid'),
+    rq.Card8('return_mode', Floating),
+    rq.Pad(1),
+    rq.Card16('return_pointer', 0),
+    rq.Card16('return_keyboard', 0)
+)
+
+AttachSlaveInfo = rq.Struct(
+    rq.Card16('type', AttachSlave),
+    rq.RequestLength(),
+    DEVICEID('deviceid'),
+    rq.Card16('new_master'),
+)
+
+DetachSlaveInfo = rq.Struct(
+    rq.Card16('type', DetachSlave),
+    rq.RequestLength(),
+    DEVICEID('deviceid'),
+    rq.Pad(2),
+)
+
 def init(disp, info):
     disp.extension_add_method('display', 'xinput_query_version', query_version)
     disp.extension_add_method('window', 'xinput_select_events', select_events)
