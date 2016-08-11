@@ -730,7 +730,7 @@ def attach_slave(self, deviceid, new_master):
     return change_hierarchy(self, (AttachSlave, deviceid, new_master))
 
 def detach_slave(self, deviceid):
-    return change_hierarchy(self, (AttachSlave, deviceid))
+    return change_hierarchy(self, (DetachSlave, deviceid))
 
 
 def init(disp, info):
