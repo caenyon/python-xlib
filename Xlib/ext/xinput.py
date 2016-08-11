@@ -720,6 +720,19 @@ def change_hierarchy(self, *changes):
         changes=changes
     )
 
+def add_master(self, name, send_core=True, enable=True):
+    return change_hierarchy(self, (AddMaster, send_core, enable, name))
+
+def remove_master(self, deviceid, return_mode=Floating, return_pointer=0, return_keyboard=0):
+    return change_hierarchy(self, (RemoveMaster, deviceid, return_mode, return_pointer, return_keyboard))
+
+def attach_slave(self, deviceid, new_master):
+    return change_hierarchy(self, (AttachSlave, deviceid, new_master))
+
+def detach_slave(self, deviceid):
+    return change_hierarchy(self, (AttachSlave, deviceid))
+
+
 def init(disp, info):
     disp.extension_add_method('display', 'xinput_query_version', query_version)
     disp.extension_add_method('window', 'xinput_select_events', select_events)
