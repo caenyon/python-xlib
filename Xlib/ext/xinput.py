@@ -765,6 +765,10 @@ def init(disp, info):
     disp.extension_add_method('display', 'xinput_ungrab_device', ungrab_device)
     disp.extension_add_method('window', 'xinput_grab_keycode', grab_keycode)
     disp.extension_add_method('window', 'xinput_ungrab_keycode', ungrab_keycode)
+    disp.extension_add_method('display', 'xinput_add_master', add_master)
+    disp.extension_add_method('display', 'xinput_remove_master', remove_master)
+    disp.extension_add_method('display', 'xinput_attach_slave', attach_slave)
+    disp.extension_add_method('display', 'xinput_detach_slave', detach_slave)
 
     for device_event in (ButtonPress, ButtonRelease, KeyPress, KeyRelease, Motion):
         disp.ge_add_event_data(info.major_opcode, device_event, DeviceEventData)
